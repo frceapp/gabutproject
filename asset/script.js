@@ -1,6 +1,6 @@
 $(window).on("load", function () {
     window.cookie_username = $.cookie("username")
-    window.features = ['Test', 'Kalkulator', 'aa']
+    window.features = ['Test', 'Kalkulator', 'Note']
     window.feature_ke = 0
 
     window.feature = function feature() {
@@ -63,7 +63,7 @@ $(window).on("load", function () {
                 $('#main').html($('.login').html())
             } else {
                 $('#username-out').html(`Wellcome, ${window.cookie_username}`)
-                $('title').html(`${window.cookie_username} - Client Side`)
+                $('title').html(`${window.cookie_username} - Gabut Project`)
 
                 $('#main').html($('#after-login').html())
 
@@ -101,7 +101,7 @@ $(window).on("load", function () {
 
                 $('#username-out').html(`Wellcome, ${window.cookie_username}`)
 
-                $('title').html(`${window.cookie_username} - Client Side`)
+                $('title').html(`${window.cookie_username} - Gabut Project`)
 
                 setTimeout(function () {
                     $('#main').html($('#after-login').html())
