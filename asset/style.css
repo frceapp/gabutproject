@@ -46,3 +46,17 @@ html, body {
     background: linear-gradient(90deg, rgba(0,212,255,1) 5%, rgba(9,9,121,1) 50%, rgba(18,16,51,1) 93%);
     border: 0 !important;
 }
+
+@media screen and (orientation:portrait) {
+
+    .main-menu {
+        width: 100%;
+    }
+}
+
+@media screen and (orientation:landscape) {
+
+    .main-menu {
+        width: 70%;
+    }
+}
