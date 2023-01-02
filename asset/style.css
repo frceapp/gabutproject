@@ -1,0 +1,48 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-color: black;
+    overflow: hidden
+}
+
+.center-card {
+    margin: 0 auto;
+    float: none;
+    margin-bottom: 10px;
+    /* display: inherit; */
+}
+
+#main {
+    transition: transform 1s, opacity 0.3s;
+    width: 100%;
+    height: 100%;
+}
+
+.after-login {
+    position: relative;
+}
+
+#login {
+    background: rgb(0,212,255);
+    background: linear-gradient(90deg, rgba(0,212,255,1) 5%, rgba(9,9,121,1) 50%, rgba(18,16,51,1) 93%);
+    border: 0;
+}
+
+.card-login {
+    background-image: url(https://thumbs.gfycat.com/AnimatedDeficientAlleycat-max-1mb.gif);
+    color: white;
+    background-size: 100%;
+}
+
+#list-f {
+    background-color: transparent;
+    border: 0;
+}
+
+.list-f-i {
+    background: rgb(0,212,255);
+    background: linear-gradient(90deg, rgba(0,212,255,1) 5%, rgba(9,9,121,1) 50%, rgba(18,16,51,1) 93%);
+    border: 0 !important;
+}
