@@ -14,8 +14,11 @@
     <div class="card card-note">
         <div class="card-body">
             <button class="btn btn-success float-start" id="add-note">Add</button>
-
             <button class="btn btn-danger float-end" id="delete-all">Delete All</button>
+
+            <br>
+            <br>
+            <input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
         </div>
     </div>
 </div>
@@ -61,7 +64,6 @@
                     `,
                 focusConfirm: false,
                 preConfirm: () => {
-                    // return [
                     var title = $('#title-note').val()
                     var data = $('#note-data').val()
 
@@ -108,9 +110,28 @@
 
                     $('#title-note').val('')
                     $('#note-data').val('')
-                    // ]
                 }
             })
+        })
+
+        $('#search').on('input', function() {
+
+            var allnote = localStorage.getItem('all-note-key')
+
+            var allnotejs = JSON.parse(allnote)
+
+            var search = $(this).val()
+            $(`.note-display`).css('display', 'none')
+
+            for (const key in allnotejs) { 
+                noteshow = `${key} ${allnotejs[key]}`
+
+                if(!noteshow.includes(search)) {
+                    delete allnotejs[key]
+                }
+            }
+
+            loadnote(allnotejs)
         })
 
         $('#title-note').on('input', function () {
@@ -242,17 +263,21 @@
             })
         }
 
-        function loadnote() {
+        function loadnote(noteselected=null) {
             var data = ''
+            
+            if (noteselected==null) {
+                var allnote = localStorage.getItem('all-note-key')
 
-            var allnote = localStorage.getItem('all-note-key')
-
-            var allnotejs = JSON.parse(allnote)
+                var allnotejs = JSON.parse(allnote)
+            } else {
+                allnotejs = noteselected
+            }
 
             for (const key in allnotejs) {
                 data += `
-                            <div class="note d-flex justify-content-center ${key}-main">
-                                <div class="card card-note">
+                            <div class="note d-flex justify-content-center ${key}-main note-display">
+                                <div class="card card-note ${key}-main note-display">
                                     <div class="card-body">
                                         <input class="form-control fw-bold" placeholder="Title" id="${key}-title" value="${key}" disabled></input>
                                         <br>
@@ -265,7 +290,7 @@
                                 </div>
                             </div>
 
-                            <br class='${key}-main'>
+                            <br class='${key}-main note-display'>
                             `
             }
 
