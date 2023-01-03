@@ -4,10 +4,14 @@
         display: block;
         overflow: auto;
     }
+
+    .card-note {
+        width: 45rem;
+    }
 </style>
 
 <div class="input-note d-flex justify-content-center">
-    <div class="card" style="width: 18rem;">
+    <div class="card card-note">
         <div class="card-body">
             <button class="btn btn-success float-start" id="add-note">Add</button>
 
@@ -248,7 +252,7 @@
             for (const key in allnotejs) {
                 data += `
                             <div class="note d-flex justify-content-center ${key}-main">
-                                <div class="card" style="width: 18rem;">
+                                <div class="card card-note">
                                     <div class="card-body">
                                         <input class="form-control fw-bold" placeholder="Title" id="${key}-title" value="${key}" disabled></input>
                                         <br>
