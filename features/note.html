@@ -1,121 +1,192 @@
-<!doctype html>
-<html lang="en">
+<style>
+    html,
+    body {
+        display: block;
+        overflow: auto;
+    }
+</style>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Note</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <style>
-        html,
-        body {
-            display: block;
-            overflow: auto;
-        }
-    </style>
-</head>
+<div class="input-note d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <button class="btn btn-success float-start" id="add-note">Add</button>
 
-<body>
-    <div class="input-note d-flex justify-content-center">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <button class="btn btn-success float-start" data-bs-toggle="modal"
-                    data-bs-target="#ModalAdd">Add</button>
+            <button class="btn btn-danger float-end" id="delete-all">Delete All</button>
+        </div>
+    </div>
+</div>
 
-                <button class="btn btn-danger float-end" id="delete-all">Delete All</button>
+<br>
+
+<div class="note justify-content-center">
+
+</div>
+
+<div class="modal fade" id="ModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Note</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="save-note" class="btn btn-success" disabled>Save changes</button>
             </div>
         </div>
     </div>
+</div>
 
-    <br>
-
-    <div class="note justify-content-center">
-
-    </div>
-
-    <div class="modal fade" id="ModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Note</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+<script>
+    $(document).ready(function () {
+        $('#add-note').click(function () {
+            const { value: formValues } = Swal.fire({
+                title: 'Add new note',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Add',
+                html:
+                    `
                     <input class="form-control fw-bold" id="title-note" placeholder="Title" value=""></input>
                     <br>
                     <textarea class="form-control" id="note-data" placeholder="Note here" rows="5"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="save-note" class="btn btn-success" disabled>Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.16/dist/sweetalert2.all.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#save-note').click(function () {
-                var title = $('#title-note').val()
-                var data = $('#note-data').val()
+                    `,
+                focusConfirm: false,
+                preConfirm: () => {
+                    // return [
+                    var title = $('#title-note').val()
+                    var data = $('#note-data').val()
 
-                var old = localStorage.getItem('all-note-key')
+                    var old = localStorage.getItem('all-note-key')
 
-                if (old === null) old = '{}';
+                    if (old === null) old = '{}';
 
-                var oldjs = JSON.parse(old)
+                    var oldjs = JSON.parse(old)
 
-                if (title in oldjs) {
-                    Swal.fire({
-                        title: 'Title already exists, want to replace it?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            oldjs[title] = data
+                    if (title in oldjs) {
+                        Swal.fire({
+                            title: 'Title already exists, want to replace it?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Yes'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                oldjs[title] = data
 
-                            localStorage.setItem('all-note-key', JSON.stringify(oldjs))
+                                localStorage.setItem('all-note-key', JSON.stringify(oldjs))
 
+                                Swal.fire({
+                                    title: 'Success add note',
+                                    icon: 'success'
+                                }).then((result) => {
+                                    loadnote()
+                                })
+                            }
+                        })
+                    } else {
+                        oldjs[title] = data
+
+                        localStorage.setItem('all-note-key', JSON.stringify(oldjs))
+
+                        Swal.fire({
+                            title: 'Success add note',
+                            icon: 'success'
+                        }).then((result) => {
                             loadnote()
-                        }
+                        })
+                    }
+
+                    $('#title-note').val('')
+                    $('#note-data').val('')
+                    // ]
+                }
+            })
+        })
+
+        $('#title-note').on('input', function () {
+            var data = $(this).val()
+
+            if (data == '') {
+                $('#save-note').prop('disabled', true)
+            } else {
+                $('#save-note').prop('disabled', false)
+            }
+        })
+
+        $('#delete-all').click(function () {
+            Swal.fire({
+                title: 'Are you sure want to delete all note?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.clear();
+
+                    Swal.fire(
+                        'Deleted!',
+                        'All note has been deleted',
+                        'success'
+                    ).then((result) => {
+                        loadnote()
                     })
-                } else {
-                    oldjs[title] = data
-
-                    localStorage.setItem('all-note-key', JSON.stringify(oldjs))
-
-                    loadnote()
-                }
-
-                $('#ModalAdd').modal('hide');
-
-                $('#title-note').val('')
-                $('#note-data').val('')
-            })
-
-            $('#title-note').on('input', function () {
-                var data = $(this).val()
-
-                if (data == '') {
-                    $('#save-note').prop('disabled', true)
-                } else {
-                    $('#save-note').prop('disabled', false)
                 }
             })
+        })
 
-            $('#delete-all').click(function () {
+        function buttoncancel(id) {
+            $(`#${id}-save`).hide()
+
+            $(`#${id}-title`).prop('disabled', true)
+            $(`#${id}-note`).prop('disabled', true)
+
+            $(`#${id}-edit`).removeClass('cancel btn-secondary').addClass('edit btn-primary').html('Edit')
+
+            afterload()
+
+            loadnote()
+        }
+
+        function button(id) {
+            $(`#${id}-save`).show()
+
+            $(`#${id}-title`).prop('disabled', false)
+            $(`#${id}-note`).prop('disabled', false)
+
+            $(`#${id}-edit`).removeClass('edit btn-primary').addClass('cancel btn-secondary').html('Cancel')
+
+            $('.cancel').click(function () {
+                buttoncancel(id)
+            })
+        }
+
+        window.button = button
+        window.buttoncancel = buttoncancel
+
+        function afterload() {
+            // $('.save').hide()
+            $('.edit').click(function () {
+                var id = $(this).attr('id').split('-')[0]
+
+                if (typeof window.old_id !== 'undefined') {
+                    buttoncancel(window.old_id)
+                }
+                window.old_id = id
+
+                button(id)
+            })
+
+            $('.delete').click(function () {
                 Swal.fire({
-                    title: 'Are you sure want to delete all note?',
+                    title: 'Are you sure want to delete this note?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -123,122 +194,59 @@
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        localStorage.clear();
+                        var id = $(this).attr('id').split('-')[0]
 
-                        Swal.fire(
-                            'Deleted!',
-                            'All note has been deleted',
-                            'success'
-                        ).then((result) => {
-                            loadnote()
-                        })
+                        var old = localStorage.getItem('all-note-key')
+
+                        var oldjs = JSON.parse(old)
+
+                        delete oldjs[id]
+
+                        localStorage.setItem('all-note-key', JSON.stringify(oldjs))
+
+                        console.log(`#${id}-main`)
+
+                        $(`.${id}-main`).remove()
                     }
                 })
             })
 
-            function buttoncancel(id) {
-                $(`#${id}-save`).hide()
+            window.afterload = afterload
+
+            $('.save').click(function () {
+                var id = $(this).attr('id').split('-')[0]
+
+                var title = $(`#${id}-title`).val()
+                var data = $(`#${id}-note`).val()
 
                 $(`#${id}-title`).prop('disabled', true)
                 $(`#${id}-note`).prop('disabled', true)
 
+                var old = localStorage.getItem('all-note-key')
+
+                var oldjs = JSON.parse(old)
+
+                oldjs[title] = data
+
+                localStorage.setItem('all-note-key', JSON.stringify(oldjs))
+
+                $(this).hide()
+
                 $(`#${id}-edit`).removeClass('cancel btn-secondary').addClass('edit btn-primary').html('Edit')
 
                 afterload()
-            }
+            })
+        }
 
-            function button(id) {
-                $(`#${id}-save`).show()
+        function loadnote() {
+            var data = ''
 
-                $(`#${id}-title`).prop('disabled', false)
-                $(`#${id}-note`).prop('disabled', false)
+            var allnote = localStorage.getItem('all-note-key')
 
-                $(`#${id}-edit`).removeClass('edit btn-primary').addClass('cancel btn-secondary').html('Cancel')
+            var allnotejs = JSON.parse(allnote)
 
-                $('.cancel').click(function () {
-                    buttoncancel(id)
-                })
-            }
-
-            window.button = button
-            window.buttoncancel = buttoncancel
-
-            function afterload() {
-                // $('.save').hide()
-                $('.edit').click(function () {
-                    var id = $(this).attr('id').split('-')[0]
-
-                    if(typeof window.old_id !== 'undefined') {
-                        buttoncancel(window.old_id)
-                    }
-                    window.old_id = id
-                    
-                    button(id)
-                })
-
-                $('.delete').click(function() {
-                    Swal.fire({
-                    title: 'Are you sure want to delete this note?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            var id = $(this).attr('id').split('-')[0]
-
-                            var old = localStorage.getItem('all-note-key')
-
-                            var oldjs = JSON.parse(old)
-
-                            delete oldjs[id]
-
-                            localStorage.setItem('all-note-key', JSON.stringify(oldjs))
-
-                            console.log(`#${id}-main`)
-
-                            $(`.${id}-main`).remove()
-                        }
-                    })
-                })
-
-                window.afterload = afterload
-
-                $('.save').click(function () {
-                    var id = $(this).attr('id').split('-')[0]
-
-                    var title = $(`#${id}-title`).val()
-                    var data = $(`#${id}-note`).val()
-
-                    $(`#${id}-title`).prop('disabled', true)
-                    $(`#${id}-note`).prop('disabled', true)
-
-                    var old = localStorage.getItem('all-note-key')
-
-                    var oldjs = JSON.parse(old)
-
-                    oldjs[title] = data
-
-                    localStorage.setItem('all-note-key', JSON.stringify(oldjs))
-
-                    $(this).hide()
-
-                    $(`#${id}-edit`).removeClass('cancel btn-secondary').addClass('edit btn-primary').html('Edit')
-
-                    afterload()
-                })
-            }
-
-            function loadnote() {
-                var data = ''
-
-                var allnote = localStorage.getItem('all-note-key')
-
-                var allnotejs = JSON.parse(allnote)
-
-                for (const key in allnotejs) {
-                    data += `
+            for (const key in allnotejs) {
+                data += `
                             <div class="note d-flex justify-content-center ${key}-main">
                                 <div class="card" style="width: 18rem;">
                                     <div class="card-body">
@@ -255,18 +263,15 @@
 
                             <br class='${key}-main'>
                             `
-                }
-
-                $('.note').html(data)
-
-                afterload()
             }
 
-            window.loadnote = loadnote
+            $('.note').html(data)
 
-            loadnote()
-        });
-    </script>
-</body>
+            afterload()
+        }
 
-</html>
+        window.loadnote = loadnote
+
+        loadnote()
+    });
+</script>
