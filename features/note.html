@@ -15,8 +15,13 @@
         <div class="card-body">
             <button class="btn btn-success float-start" id="add-note">Add</button>
             <button class="btn btn-danger float-end" id="delete-all">Delete All</button>
-
             <br>
+            <br>
+            <button class="btn btn-primary float-start" id="import-note"><i
+                    class="fa-solid fa-file-import"></i></button>
+            <button class="btn btn-primary float-end" id="export-note"><i class="fa-solid fa-file-export"></i></button>
+            <br>
+
             <br>
             <input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
         </div>
@@ -46,6 +51,8 @@
         </div>
     </div>
 </div>
+
+<input type="file" id="note-file-import" name="files" style="display: none;">
 
 <script>
     $(document).ready(function () {
@@ -114,7 +121,40 @@
             })
         })
 
-        $('#search').on('input', function() {
+        $('#import-note').click(function () {
+            $('#note-file-import').click()
+        })
+
+        $('#export-note').click(function () {
+            var file_name = $.cookie("username")
+
+            var link = document.createElement('a');
+            link.download = `${file_name}-export.notes`;
+            var blob = new Blob([localStorage.getItem('all-note-key')], { type: 'text/plain' });
+            link.href = window.URL.createObjectURL(blob);
+            link.click();
+        })
+
+        $('#note-file-import').on('change', function () {
+            var file = $(this).prop('files')[0];
+            // console.log(file)
+            // return
+            if (file) {
+                var reader = new FileReader();
+                reader.readAsText(file, "UTF-8");
+                reader.onload = function (evt) {
+                    console.log(evt.target.result);
+                    localStorage.setItem('all-note-key', evt.target.result)
+
+                    loadnote()
+                }
+                reader.onerror = function (evt) {
+                    alert("error reading file");
+                }
+            }
+        })
+
+        $('#search').on('input', function () {
 
             var allnote = localStorage.getItem('all-note-key')
 
@@ -123,10 +163,10 @@
             var search = $(this).val()
             $(`.note-display`).css('display', 'none')
 
-            for (const key in allnotejs) { 
+            for (const key in allnotejs) {
                 noteshow = `${key} ${allnotejs[key]}`
 
-                if(!noteshow.includes(search)) {
+                if (!noteshow.includes(search)) {
                     delete allnotejs[key]
                 }
             }
@@ -263,10 +303,10 @@
             })
         }
 
-        function loadnote(noteselected=null) {
+        function loadnote(noteselected = null) {
             var data = ''
-            
-            if (noteselected==null) {
+
+            if (noteselected == null) {
                 var allnote = localStorage.getItem('all-note-key')
 
                 var allnotejs = JSON.parse(allnote)
