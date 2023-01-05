@@ -60,3 +60,20 @@ html, body {
         width: 70%;
     }
 }
+
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background: linear-gradient(200deg, rgba(0,212,255,1) 5%, rgba(9,9,121,1) 50%, rgba(18,16,51,1) 93%);
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
+}

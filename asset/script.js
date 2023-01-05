@@ -3,24 +3,51 @@ $(window).on("load", function () {
     window.features = ['Test', 'Kalkulator', 'Note']
     window.feature_ke = 0
 
-    window.feature = function feature() {
-        $('#main').css('opacity', `0%`)
+    window.feature = function feature(fastload=false) {
+        if (fastload) {
+            var loadtime = 0
+            var path = $.cookie("path")
+        } else {
+            $('#main').css('opacity', `0%`)
+            var loadtime = 1000
+            var path = window.features[window.feature_ke].toLowerCase()
+        }
 
         setTimeout(function () {
             $.ajax({
                 type: "GET",
-                url: document.URL + 'features/' + window.features[window.feature_ke].toLowerCase() + '.html',
+                url: window.location.origin + '/features/' + path + '.html',
                 success: function (response) {
                     $('#main').css('opacity', `100%`)
                     $('#main').html(response)
+                    $('#main').append(`
+                        <a id='home-button' class="float">
+                            <i class="fa fa-home my-float"></i>
+                        </a>
+                    `)
+
+                    $.cookie("path", path, {
+                        expires: 1,
+                        secure: true
+                    })
+
+                    $('#home-button').click(function() {
+                        $.cookie("path", 'home', {
+                            expires: 1,
+                            secure: true
+                        })
+
+                        location.reload()
+                    })
                 }
             });
-        }, 1000)
+        }, loadtime)
     }
 
     window.afterlogin = function () {
         $('#logout').click(function () {
             $.removeCookie('username')
+            $.removeCookie('path')
             location.reload()
         })
 
@@ -62,12 +89,29 @@ $(window).on("load", function () {
             if (typeof window.cookie_username === 'undefined') {
                 $('#main').html($('.login').html())
             } else {
-                $('#username-out').html(`Wellcome, ${window.cookie_username}`)
-                $('title').html(`${window.cookie_username} - Gabut Project`)
 
-                $('#main').html($('#after-login').html())
+                if (typeof $.cookie("path") === 'undefined') {
+                    $.cookie("path", 'home', {
+                        expires: 1,
+                        secure: true
+                    })
 
-                afterlogin()
+                    var load_home = true
+                } else if ($.cookie("path") != 'home') {
+                    feature(true)
+                    var load_home = false
+                } else {
+                    var load_home = true
+                }
+
+                if (load_home) {
+                    $('#username-out').html(`Wellcome, ${window.cookie_username}`)
+                    $('title').html(`${window.cookie_username} - Gabut Project`)
+
+                    $('#main').html($('#after-login').html())
+
+                    afterlogin()
+                }
             }
 
             $('#main').css('opacity', `1`)
