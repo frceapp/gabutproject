@@ -1,0 +1,248 @@
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="https://assets1.cbsnewsstatic.com/hub/i/r/2022/09/05/f4c351d1-521d-4168-a8b9-7b3b784de8b8/thumbnail/640x370/b0a70ffc97e336e3b6f2ab596a5f5082/main-image-star-forming-region-carina-nircam-final-1280.jpg">
+        <title>Monitoring Jam Kerja</title>
+        <style>
+        	html, body {
+                height: 100%;
+                /* width: 100%; */
+            }
+
+            html {
+                display: table;
+                margin: auto;
+                background-color: black;
+            }
+
+            body {
+                display: table-cell;
+                vertical-align: middle;
+                background-color: transparent;
+            }
+
+            .container {
+                color: white;
+                font-size: 20px;
+                background-color: transparent;
+                display: flex;
+                text-align: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                font-weight: bold;
+                width: 100%;
+                /* flex-direction:column; */
+            }
+
+            .line-break {
+                width: 100%;
+                height: 1px;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="res/loading-bar.css"/>
+    </head>
+    <body>
+        <div class="container">
+                <!-- <h3 id="info-tanggal"></h3> -->
+                <div class="info"></div>
+                <div class="line-break"></div>
+                <div class="countdown"></div>
+                <div class="line-break"></div>
+                <!-- <h3 id="countdown-hours"></h3> -->
+                <div id="loading-bar" data-type="stroke" style="width: 30%; height: 150px;" 
+                data-path="m 270 217.38 l 0 0 a 127.47 127.47 90 0 1 -160.49 57.53 c 0.77 0.05 43.6 2.93 57.78 -7.87 c 0 0 -69.5 -8.18 -68.47 -83.46 c 0 0 8.51 14.64 23.84 14.64 s 25.89 -18.39 25.89 -36.45 s -21.46 -41.22 -45.65 -41.22 s -64.29 20.53 -55.12 100.52 a 127.39 127.39 90 0 1 32.43 -164.95 c -0.95 1.42 -24.38 36.39 -22.21 53.88 c 0 0 42 -56 106.57 -17.28 c 0 0 -17 0 -24.65 13.26 s 2.9 31.62 18.51 40.69 s 46.43 2.15 58.58 -18.76 s 14.56 -65.91 -59.2 -98.2 h 0.05 a 127.36 127.36 90 0 1 125.69 106.87 c -0.62 -1.17 -20.39 -38.71 -36.9 -45.1 c 0.42 0.93 28.88 63.79 -35.34 102 c 0 0 8 -14.92 0 -28 s -29.22 -12.45 -44.61 -3 s -23.9 39.85 -11.26 60.47 s 51.17 44.05 114.56 -5.57 z"
+                ></div>
+        </div>
+
+    <script type="text/javascript" src="res/loading-bar.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        (function() {
+        var start = new Date;
+        var start2 = new Date;
+
+        window.blink = true
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        var bar = new ldBar("#loading-bar", {
+            "preset": "none",
+            "stroke":`data:ldbar/res,gradient(0,1,#cb6bff,#b833ff,#b01cff)`,
+            "value": 0,
+            "stroke-width": 2,
+            "stroke-trail-width": 0.7,
+        });
+
+        function checkTime() {
+            var d = new Date();
+            var hours = d.getHours();
+            var mins = d.getMinutes();
+            var day = d.getDay();
+
+            var namahari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+            // $('#info-tanggal').html(`${namahari[day - 1]}`)
+
+            // if (window.blink) {
+            //     $('html').css('background-color', 'white')
+            //     $('.container').css('color', 'black')
+            //     window.blink = false
+            // } else {
+            //     $('html').css('background-color', 'black')
+            //     $('.container').css('color', 'white')
+            //     window.blink = true
+            // }
+
+            
+
+            if (day >= 1 && day <= 5 - 1) {
+                if( (hours > 7 || hours === 7 && mins >= 20) && (hours < 9 || hours === 9 && mins <= 0) ) {
+                    window.time_status = 'Jam Istirahat Pertama'
+                    start.setHours(9, 0, 0);
+                    start2.setHours(7, 20, 0)
+                } else if( (hours > 9 || hours === 9 && mins >= 15) && (hours < 11 || hours === 11 && mins <= 45) ) {
+                    window.time_status = 'Jam Istirahat Kedua'
+                    start.setHours(11, 45, 0);
+                    start2.setHours(9, 15, 0)
+                } else if( (hours > 12 || hours === 12 && mins >= 30) && (hours < 15 || hours === 15 && mins <= 20) ) {
+                    window.time_status = 'Jam Pulang' 
+                    start.setHours(15, 20, 0);
+                    start2.setHours(12, 35, 0)
+                }
+
+                if( (hours > 9 || hours === 9 && mins >= 0) && (hours < 9 || hours === 9 && mins <= 15) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Istirahat Bang'
+                    return true
+                } else if( (hours > 11 || hours === 11 && mins >= 45) && (hours < 12 || hours === 12 && mins <= 30) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Makan dulu Bang'
+                    return true
+                } else if( (hours > 15 || hours === 15 && mins >= 20) && (hours < 15 || hours === 15 && mins <= 30) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Pulang Bang'
+                    window.setTimeout(function(){ window.location = 'https://trendnesia.com/wp-content/uploads/2023/01/Apa-Itu-Aduh-Masbro-Meme.jpg' }, 3000);
+                    $('html').css('background-color', 'pink')
+                    return true
+                }
+            } else if (day == 5) {
+                if( (hours > 7 || hours === 7 && mins >= 20) && (hours < 9 || hours === 9 && mins <= 0) ) {
+                    window.time_status = 'Jam Istirahat Pertama'
+                    start.setHours(9, 0, 0);
+                    start2.setHours(7, 20, 0)
+                } else if( (hours > 9 || hours === 9 && mins >= 15) && (hours < 11 || hours === 11 && mins <= 45) ) {
+                    window.time_status = 'Jam Istirahat Kedua'
+                    start.setHours(11, 45, 0);
+                    start2.setHours(9, 15, 0)
+                } else if( (hours > 12 || hours === 12 && mins >= 45) && (hours < 14 || hours === 14 && mins <= 35) ) {
+                    window.time_status = 'Jam Pulang' 
+                    start.setHours(14, 35, 0);
+                    start2.setHours(12, 45, 0)
+                }
+
+                if( (hours > 9 || hours === 9 && mins >= 0) && (hours < 9 || hours === 9 && mins <= 15) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Istirahat Bang'
+                    return true
+                } else if( (hours > 11 || hours === 11 && mins >= 45) && (hours < 12 || hours === 12 && mins <= 45) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Makan dulu Bang'
+                    return true
+                } else if( (hours > 14 || hours === 14 && mins >= 35) && (hours < 14 || hours === 14 && mins <= 50) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Pulang Bang'
+                    return true
+                }
+            } else if (day == 6) {
+                if( (hours > 7 || hours === 7 && mins >= 20) && (hours < 9 || hours === 9 && mins <= 0) ) {
+                    window.time_status = 'Jam Istirahat Pertama'
+                    start.setHours(9, 0, 0);
+                    start2.setHours(7, 20, 0)
+                } else if( (hours > 9 || hours === 9 && mins >= 15) && (hours < 12 || hours === 12 && mins <= 15) ) {
+                    window.time_status = 'Jam Istirahat Kedua'
+                    start.setHours(12, 15, 0);
+                    start2.setHours(9, 15, 0)
+                } else if( (hours > 15 - 2 || hours === 15 - 2 && mins >= 0) && (hours < 14 || hours === 14 && mins <= 20) ) {
+                    window.time_status = 'Jam Pulang'
+                    start.setHours(14, 20, 0);
+                    start2.setHours(15 - 2, 0, 0)
+                }
+
+                if( (hours > 9 || hours === 9 && mins >= 0) && (hours < 9 || hours === 9 && mins <= 15) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Istirahat Bang'
+                    return true
+                } else if( (hours > 12 || hours === 12 && mins >= 15) && (hours < 15 - 2 || hours === 15 - 2 && mins <= 0) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Makan dulu Bang'
+                    return true
+                } else if( (hours > 14 || hours === 14 && mins >= 20) && (hours < 14 || hours === 14 && mins <= 30) ) { 
+                    window.time_status = ''
+                    window.time_status_data = 'Pulang Bang'
+                    return true
+                }
+            }
+        }
+
+        // $('#info').html(checkTime())
+
+        function pad(num) {
+            return ("0" + parseInt(num)).substr(-2);
+        }
+
+        function tick() {
+            var now = new Date;
+            
+            var is_check = checkTime();
+
+            if (now > start) {
+            start.setDate(start.getDate() + 1);
+            }
+            var remain = ((start - now) / 1000);
+            var hh = pad((remain / 60 / 60) % 60);
+            var mm = pad((remain / 60) % 60);
+            var ss = pad(remain % 60);
+
+            var remain2 = ((start - start2) / 1000);
+            var hh2 = pad((remain2 / 60 / 60) % 60);
+            var mm2 = pad((remain2 / 60) % 60);
+            var ss2 = pad(remain2 % 60);
+
+            hours_left = (parseInt(hh) + ((parseInt(mm))/60))
+            hours_left2 = (parseInt(hh2) + ((parseInt(mm2))/60))
+
+            hours_percent = 100 - (hours_left / hours_left2 * 100) - 1
+
+            var countdown = hh + ":" + mm + ":" + ss
+            if (!is_check) {
+                bar.set(hours_percent.toFixed(2))
+                $('.info').html(window.time_status)
+                $('.countdown').html(`${countdown}`)
+                // $('#countdown-hours').html(`${hours_left.toFixed(2)} Jam`)
+            } else {
+                bar.set(100)
+                $('.info').html(window.time_status)
+                $('.countdown').html(window.time_status_data)
+            }
+
+            if (countdown == '00:00:00') {
+                window.istirahat = true
+            }
+            
+            setTimeout(tick, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', tick);
+        })();
+    </script>
+    </body>
+</html>
