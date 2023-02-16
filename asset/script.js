@@ -1,6 +1,6 @@
 $(window).on("load", function () {
     window.cookie_username = $.cookie("username")
-    window.features = ['Test', 'Kalkulator', 'Note']
+    window.features = ['Test', 'Kalkulator', 'Note', 'SNPMB']
     window.feature_ke = 0
 
     window.feature = function feature(fastload=false) {
